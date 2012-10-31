@@ -131,7 +131,6 @@ Handle<Value> NodeDSP::MulCplx (const Arguments &args) {
 	return Undefined();
 }
 
-/* FIXME: Fix this as the spec is fixed */
 Handle<Value> NodeDSP::DivCplx (const Arguments &args) {
 	HandleScope scope;
 
@@ -161,7 +160,7 @@ Handle<Value> NodeDSP::DivCplx (const Arguments &args) {
 			float denom = yr * yr + yi * yi;
 			float x_r = xReal[i];
 			dstReal[i] = (x_r * yr + xImag[i] * yi) / denom;
-			dstImag[i] = (xImag[i] * yr - x_r * yi) / denom;
+			dstImag[i] = (x_r * yi - xImag[i] * yr) / denom;
 		}
 	} else {
 		int l = min(ldstr, min(ldsti, min(lxr, min(lxi, min(lyr, lyi)))));
