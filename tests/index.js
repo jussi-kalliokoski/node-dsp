@@ -2,6 +2,8 @@ var fs = require('fs')
 var Path = require('path')
 var DSP = require('../build/Release/node-dsp')
 
+const EPSILON = 0.0004
+
 function ls (path, expr) {
 	var dir = fs.readdirSync(path)
 
@@ -10,6 +12,12 @@ function ls (path, expr) {
 	return dir.filter(function (p) {
 		return expr.test(p)
 	})
+}
+
+function numericalCompare (x, y, e) {
+	if (x === y || (isNaN(x) && isNaN(y))) return true
+
+	return Math.abs((x - y) / x) < e
 }
 
 var dirname = Path.join(__dirname, 'tests')
@@ -37,7 +45,7 @@ ls(dirname, /\.json$/).forEach(function (testpath) {
 			var r = new Float32Array(tests[i].result)
 
 			for (var n=0; n<r.length; n++) {
-				if (args[i][n] === r[n]) continue
+				if (numericalCompare(r[n], args[i][n])) continue
 
 				failed.push({
 					error: Error('result mismatch'),
