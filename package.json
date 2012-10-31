@@ -1,0 +1,20 @@
+{
+  "name": "dsp",
+  "version": "0.0.0",
+  "description": "A node implementation of the DSP API.",
+  "main": "./build/Release/node-dsp",
+  "scripts": {
+    "test": "node tests",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jussi-kalliokoski/node-dsp"
+  },
+  "keywords": [
+    "DSP"
+  ],
+  "author": "Jussi Kalliokoski",
+  "license": "BSD",
+  "gypfile": true
+}
