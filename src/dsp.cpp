@@ -1,5 +1,6 @@
 #include <math.h>
 #include <algorithm>
+#include <time.h>
 
 #include "dsp.h"
 #include "common.h"
@@ -17,6 +18,8 @@ extern "C" void init (v8::Handle<v8::Object> target) {
 
 void NodeDSP::Initialize (Handle<Object> target) {
 	HandleScope scope;
+
+	srand((unsigned) time(0));
 
 	SetMethod(target, "add", Add);
 	SetMethod(target, "abs", Abs);
@@ -43,7 +46,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 //	SetMethod(target, "pack", Pack);
 	SetMethod(target, "pow", Pow);
 	SetMethod(target, "ramp", Ramp);
-//	SetMethod(target, "random", Random);
+	SetMethod(target, "random", Random);
 	SetMethod(target, "round", Round);
 //	SetMethod(target, "sampleCubic", SampleCubic);
 //	SetMethod(target, "sampleLinear", SampleLinear);
@@ -123,6 +126,23 @@ Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 
 	for (int i=0; i<l; i++) {
 		dst[i] = first + i * ((last - first) / (l - 1));
+	}
+
+	return Undefined();
+}
+
+Handle<Value> NodeDSP::Random (const Arguments &args) {
+	HandleScope scope;
+
+	getFloat32Array(args[0]->ToObject(), dst, l);
+
+	if (dst == NULL) return INVALID_ARGUMENTS_ERROR;
+
+	double low = args[1]->IsNumber() ? args[1]->NumberValue() : 0.0;
+	double high = args[2]->IsNumber() ? args[2]->NumberValue() : 1.0;
+
+	for (int i=0; i<l; i++) {
+		dst[i] = low + (float) rand() / ((float) RAND_MAX / (high - low));
 	}
 
 	return Undefined();
