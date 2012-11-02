@@ -8,7 +8,7 @@ public:
 	static void Initialize (v8::Handle<v8::Object> target);
 
 	static v8::Handle<v8::Value> Abs (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> AbsCplx (const v8::Arguments &args);
+	static v8::Handle<v8::Value> AbsCplx (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Acos (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Add (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Asin (const v8::Arguments &args);

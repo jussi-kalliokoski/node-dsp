@@ -20,7 +20,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 
 	SetMethod(target, "add", Add);
 	SetMethod(target, "abs", Abs);
-//	SetMethod(target, "absCplx", AbsCplx);
+	SetMethod(target, "absCplx", AbsCplx);
 	SetMethod(target, "acos", Acos);
 	SetMethod(target, "add", Add);
 	SetMethod(target, "asin", Asin);
@@ -104,3 +104,5 @@ DSP_METHOD_CPLX_2_OVERLOADING(DivCplx,
 	dstReal[i] = (x_r * y_r + xImag[i] * yImag[i]) / denom;
 	dstImag[i] = (x_r * yImag[i] - xImag[i] * y_r) / denom;
 )
+
+DSP_METHOD_2(AbsCplx, sqrt(pow(x[i], 2) + pow(y[i], 2)))
