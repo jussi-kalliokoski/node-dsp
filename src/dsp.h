@@ -30,7 +30,7 @@ public:
 	static v8::Handle<v8::Value> MulCplx (const v8::Arguments &args);
 //	static v8::Handle<v8::Value> Pack (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Pow (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> Ramp (const v8::Arguments &args);
+	static v8::Handle<v8::Value> Ramp (const v8::Arguments &args);
 //	static v8::Handle<v8::Value> Random (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Round (const v8::Arguments &args);
 //	static v8::Handle<v8::Value> SampleCubic (const v8::Arguments &args);

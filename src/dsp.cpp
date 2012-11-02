@@ -42,7 +42,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 	SetMethod(target, "mulCplx", MulCplx);
 //	SetMethod(target, "pack", Pack);
 	SetMethod(target, "pow", Pow);
-//	SetMethod(target, "ramp", Ramp);
+	SetMethod(target, "ramp", Ramp);
 //	SetMethod(target, "random", Random);
 	SetMethod(target, "round", Round);
 //	SetMethod(target, "sampleCubic", SampleCubic);
@@ -106,3 +106,24 @@ DSP_METHOD_CPLX_2_OVERLOADING(DivCplx,
 )
 
 DSP_METHOD_2(AbsCplx, sqrt(pow(x[i], 2) + pow(y[i], 2)))
+
+Handle<Value> NodeDSP::Ramp (const Arguments &args) {
+	HandleScope scope;
+
+	getFloat32Array(args[0]->ToObject(), dst, l);
+
+	if (
+		dst == NULL ||
+		!args[1]->IsNumber() ||
+		!args[2]->IsNumber()
+	) return INVALID_ARGUMENTS_ERROR;
+
+	double first = args[1]->NumberValue();
+	double last = args[2]->NumberValue();
+
+	for (int i=0; i<l; i++) {
+		dst[i] = first + i * ((last - first) / (l - 1));
+	}
+
+	return Undefined();
+}
