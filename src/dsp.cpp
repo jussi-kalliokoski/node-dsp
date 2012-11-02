@@ -87,92 +87,20 @@ DSP_METHOD_ACCUMULATOR(Sum, 0.0, src[i] + v)
 DSP_METHOD_ACCUMULATOR(Max, 1.0/0.0, max(src[i], v))
 DSP_METHOD_ACCUMULATOR(Min, 1.0/0.0, min(src[i], v))
 
-Handle<Value> NodeDSP::MulCplx (const Arguments &args) {
-	HandleScope scope;
+DSP_METHOD_CPLX_2_OVERLOADING(MulCplx,
+	dstReal[i] = x_r * yr - xImag[i] * yi;
+	dstImag[i] = x_r * yi + xImag[i] * yr;
+,
+	dstReal[i] = x_r * y_r - xImag[i] * yImag[i];
+	dstImag[i] = x_r * yImag[i] + xImag[i] * y_r;
+)
 
-	getFloat32Array(args[0]->ToObject(), dstReal, ldstr);
-	getFloat32Array(args[1]->ToObject(), dstImag, ldsti);
-	getFloat32Array(args[2]->ToObject(), xReal, lxr);
-	getFloat32Array(args[3]->ToObject(), xImag, lxi);
-	getFloat32Array(args[4]->ToObject(), yReal, lyr);
-	getFloat32Array(args[5]->ToObject(), yImag, lyi);
-
-	if (
-		dstReal == NULL ||
-		dstImag == NULL ||
-		xReal == NULL ||
-		xImag == NULL
-	) return INVALID_ARGUMENTS_ERROR;
-
-	if (yReal == NULL || yImag == NULL) {
-		if (!args[4]->IsNumber()) return INVALID_ARGUMENTS_ERROR;
-		if (!args[5]->IsNumber()) return INVALID_ARGUMENTS_ERROR;
-
-		float yr = args[4]->NumberValue();
-		float yi = args[5]->NumberValue();
-		int l = min(ldstr, min(ldsti, min(lxr, lxi)));
-
-		for (int i=0; i<l; i++) {
-			float x_r = xReal[i];
-			dstReal[i] = x_r * yr - xImag[i] * yi;
-			dstImag[i] = x_r * yi + xImag[i] * yr;
-		}
-	} else {
-		int l = min(ldstr, min(ldsti, min(lxr, min(lxi, min(lyr, lyi)))));
-
-		for (int i=0; i<l; i++) {
-			float x_r = xReal[i];
-			float y_r = yReal[i];
-			dstReal[i] = x_r * y_r - xImag[i] * yImag[i];
-			dstImag[i] = x_r * yImag[i] + xImag[i] * y_r;
-		}
-	}
-
-	return Undefined();
-}
-
-Handle<Value> NodeDSP::DivCplx (const Arguments &args) {
-	HandleScope scope;
-
-	getFloat32Array(args[0]->ToObject(), dstReal, ldstr);
-	getFloat32Array(args[1]->ToObject(), dstImag, ldsti);
-	getFloat32Array(args[2]->ToObject(), xReal, lxr);
-	getFloat32Array(args[3]->ToObject(), xImag, lxi);
-	getFloat32Array(args[4]->ToObject(), yReal, lyr);
-	getFloat32Array(args[5]->ToObject(), yImag, lyi);
-
-	if (
-		dstReal == NULL ||
-		dstImag == NULL ||
-		xReal == NULL ||
-		xImag == NULL
-	) return INVALID_ARGUMENTS_ERROR;
-
-	if (yReal == NULL || yImag == NULL) {
-		if (!args[4]->IsNumber()) return INVALID_ARGUMENTS_ERROR;
-		if (!args[5]->IsNumber()) return INVALID_ARGUMENTS_ERROR;
-
-		float yr = args[4]->NumberValue();
-		float yi = args[5]->NumberValue();
-		int l = min(ldstr, min(ldsti, min(lxr, lxi)));
-
-		for (int i=0; i<l; i++) {
-			float denom = yr * yr + yi * yi;
-			float x_r = xReal[i];
-			dstReal[i] = (x_r * yr + xImag[i] * yi) / denom;
-			dstImag[i] = (x_r * yi - xImag[i] * yr) / denom;
-		}
-	} else {
-		int l = min(ldstr, min(ldsti, min(lxr, min(lxi, min(lyr, lyi)))));
-
-		for (int i=0; i<l; i++) {
-			float denom = yReal[i] * yReal[i] + yImag[i] * yImag[i];
-			float x_r = xReal[i];
-			float y_r = yReal[i];
-			dstReal[i] = (x_r * y_r + xImag[i] * yImag[i]) / denom;
-			dstImag[i] = (x_r * yImag[i] - xImag[i] * y_r) / denom;
-		}
-	}
-
-	return Undefined();
-}
+DSP_METHOD_CPLX_2_OVERLOADING(DivCplx,
+	float denom = yr * yr + yi * yi;
+	dstReal[i] = (x_r * yr + xImag[i] * yi) / denom;
+	dstImag[i] = (x_r * yi - xImag[i] * yr) / denom;
+,
+	float denom = y_r * y_r + yImag[i] * yImag[i];
+	dstReal[i] = (x_r * y_r + xImag[i] * yImag[i]) / denom;
+	dstImag[i] = (x_r * yImag[i] - xImag[i] * y_r) / denom;
+)

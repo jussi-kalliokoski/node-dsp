@@ -141,8 +141,10 @@
 	getFloat32Array(args[5]->ToObject(), yImag, lyi);\
 \
 	if (\
-		dstReal == NULL || dstImag == NULL\
-		xReal == NULL || xImag == NULL\
+		dstReal == NULL ||\
+		dstImag == NULL ||\
+		xReal == NULL ||\
+		xImag == NULL\
 	) return INVALID_ARGUMENTS_ERROR;\
 \
 	if (yReal == NULL || yImag == NULL) {\
@@ -153,11 +155,18 @@
 		float yi = args[5]->NumberValue();\
 		int l = min(ldstr, min(ldsti, min(lxr, lxi)));\
 \
-		for (int i=0; i<l; i++) algo1\
+		for (int i=0; i<l; i++) {\
+			float x_r = xReal[i];\
+			algo1\
+		}\
 	} else {\
 		int l = min(ldstr, min(ldsti, min(lxr, min(lxi, min(lyr, lyi)))));\
 \
-		for (int i=0; i<l; i++) algo2\
+		for (int i=0; i<l; i++) {\
+			float x_r = xReal[i];\
+			float y_r = yReal[i];\
+			algo2\
+		}\
 	}\
 \
 	return Undefined();\
