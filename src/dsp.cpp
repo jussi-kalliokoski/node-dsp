@@ -146,4 +146,35 @@ Handle<Value> NodeDSP::Random (const Arguments &args) {
 	}
 
 	return Undefined();
-;}
+}
+
+Handle<Value> NodeDSP::Clamp (const Arguments &args) {
+	HandleScope scope;
+
+	int n = 0;
+	Float32Array dst(args[n++]->ToObject());
+	Float32Array x(args[n++]->ToObject());
+
+	if (args.Length() == 3) {
+		x.set(dst);
+		n--;
+	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;
+
+	if (
+		!dst.IsValid() ||
+		!x.IsValid() ||
+		!args[n+0]->IsNumber() ||
+		!args[n+1]->IsNumber()
+	) return INVALID_ARGUMENTS_ERROR;
+
+	float minArg = args[n+0]->NumberValue();
+	float maxArg = args[n+1]->NumberValue();
+
+	int l = MIN2(dst, x);
+
+	for (int i=0; i<l; i++) {
+		dst[i] = clamp(x[i], minArg, maxArg);
+	}
+
+	return Undefined();
+}

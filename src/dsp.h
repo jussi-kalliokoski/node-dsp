@@ -15,7 +15,7 @@ public:
 	static v8::Handle<v8::Value> Atan (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Atan2 (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Ceil (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> Clamp (const v8::Arguments &args);
+	static v8::Handle<v8::Value> Clamp (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Cos (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Div (const v8::Arguments &args);
 	static v8::Handle<v8::Value> DivCplx (const v8::Arguments &args);
