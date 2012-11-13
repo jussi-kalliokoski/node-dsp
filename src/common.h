@@ -10,6 +10,7 @@
 #define MIN4(x, y, z, q) (min(x.length, min(y.length, min(z.length, q.length))))
 
 #define INVALID_ARGUMENTS_ERROR ThrowException(Exception::Error(String::New("Invalid arguments.")))
+#define OVERLAP_ERROR ThrowException(Exception::Error(String::New("Source overlaps destination.")))
 
 #define DSP_METHOD_ACCUMULATOR(name, defaultReturn, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
@@ -35,7 +36,14 @@
 	Float32Array dst(args[0]->ToObject());\
 	Float32Array x(args[1]->ToObject());\
 \
-	if (!dst.IsValid() || !x.IsValid()) return INVALID_ARGUMENTS_ERROR;\
+	if (args.Length() == 1) {\
+		x.set(dst);\
+	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;\
+\
+	if (\
+		!dst.IsValid() ||\
+		!x.IsValid()\
+	) return INVALID_ARGUMENTS_ERROR;\
 \
 	int l = MIN2(dst, x);\
 \
@@ -52,6 +60,12 @@
 	Float32Array dst(args[0]->ToObject());\
 	Float32Array x(args[1]->ToObject());\
 	Float32Array y(args[2]->ToObject());\
+\
+	if (args.Length() == 2) {\
+		y.set(x);\
+		x.set(dst);\
+	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;\
+	if (dst.Overlaps(y)) return OVERLAP_ERROR;\
 \
 	if (\
 		!dst.IsValid() ||\
@@ -71,16 +85,24 @@
 #define DSP_METHOD_2_OVERLOADING(name, algo1, algo2) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dst(args[0]->ToObject());\
-	Float32Array x(args[1]->ToObject());\
-	Float32Array y(args[2]->ToObject());\
+	int n = 0;\
+	Float32Array dst(args[n++]->ToObject());\
+	Float32Array x(args[n++]->ToObject());\
+	Float32Array y(args[n++]->ToObject());\
+\
+	if (args.Length() == 2) {\
+		y.set(x);\
+		x.set(dst);\
+		n--;\
+	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;\
+	if (dst.Overlaps(y)) return OVERLAP_ERROR;\
 \
 	if (!dst.IsValid() || !x.IsValid()) return INVALID_ARGUMENTS_ERROR;\
 \
 	if (!y.IsValid()) {\
-		if (!args[2]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+		if (!args[n-1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
 \
-		float yy = args[2]->NumberValue();\
+		float yy = args[n-1]->NumberValue();\
 		int l = MIN2(dst, x);\
 \
 		for (int i=0; i<l; i++) {\
@@ -100,10 +122,20 @@
 #define DSP_METHOD_3_OVERLOADING(name, algo1, algo2) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dst(args[0]->ToObject());\
-	Float32Array x(args[1]->ToObject());\
-	Float32Array y(args[2]->ToObject());\
-	Float32Array z(args[3]->ToObject());\
+	int n = 0;\
+	Float32Array dst(args[n++]->ToObject());\
+	Float32Array x(args[n++]->ToObject());\
+	Float32Array y(args[n++]->ToObject());\
+	Float32Array z(args[n++]->ToObject());\
+\
+	if (args.Length() == 3) {\
+		z.set(y);\
+		y.set(x);\
+		x.set(dst);\
+		n--;\
+	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;\
+	if (dst.Overlaps(y)) return OVERLAP_ERROR;\
+	if (dst.Overlaps(z)) return OVERLAP_ERROR;\
 \
 	if (\
 		!dst.IsValid() ||\
@@ -112,9 +144,9 @@
 	) return INVALID_ARGUMENTS_ERROR;\
 \
 	if (!z.IsValid()) {\
-		if (!args[3]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+		if (!args[n-1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
 \
-		float zz = args[3]->NumberValue();\
+		float zz = args[n-1]->NumberValue();\
 		int l = MIN3(dst, x, y);\
 \
 		for (int i=0; i<l; i++) {\
@@ -134,12 +166,32 @@
 #define DSP_METHOD_CPLX_2_OVERLOADING(name, algo1, algo2) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dstReal(args[0]->ToObject());\
-	Float32Array dstImag(args[1]->ToObject());\
-	Float32Array xReal(args[2]->ToObject());\
-	Float32Array xImag(args[3]->ToObject());\
-	Float32Array yReal(args[4]->ToObject());\
-	Float32Array yImag(args[5]->ToObject());\
+	int n = 0;\
+	Float32Array dstReal(args[n++]->ToObject());\
+	Float32Array dstImag(args[n++]->ToObject());\
+	Float32Array xReal(args[n++]->ToObject());\
+	Float32Array xImag(args[n++]->ToObject());\
+	Float32Array yReal(args[n++]->ToObject());\
+	Float32Array yImag(args[n++]->ToObject());\
+\
+	if (args.Length() == 4) {\
+		yReal.set(xReal);\
+		yImag.set(xImag);\
+		xReal.set(dstReal);\
+		xImag.set(dstImag);\
+		n -= 2;\
+	} else if (\
+		dstReal.Overlaps(xReal) ||\
+		dstImag.Overlaps(xImag) ||\
+		dstReal.Overlaps(xImag) ||\
+		dstImag.Overlaps(xReal)\
+	) return OVERLAP_ERROR;\
+	if (\
+		dstReal.Overlaps(yReal) ||\
+		dstImag.Overlaps(yImag) ||\
+		dstReal.Overlaps(yImag) ||\
+		dstImag.Overlaps(yReal)\
+	) return OVERLAP_ERROR;\
 \
 	if (\
 		!dstReal.IsValid() ||\
@@ -149,11 +201,11 @@
 	) return INVALID_ARGUMENTS_ERROR;\
 \
 	if (!yReal.IsValid() || !yImag.IsValid()) {\
-		if (!args[4]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
-		if (!args[5]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+		if (!args[n-2]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+		if (!args[n-1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
 \
-		float yr = args[4]->NumberValue();\
-		float yi = args[5]->NumberValue();\
+		float yr = args[n-2]->NumberValue();\
+		float yi = args[n-1]->NumberValue();\
 		int l = min(MIN2(dstReal, dstImag), MIN2(xReal, xImag));\
 \
 		for (int i=0; i<l; i++) {\
