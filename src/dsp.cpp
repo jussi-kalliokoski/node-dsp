@@ -4,6 +4,7 @@
 
 #include "dsp.h"
 #include "common.h"
+#include "float32array.h"
 
 using namespace v8;
 using namespace node;
@@ -14,7 +15,6 @@ extern "C" void init (v8::Handle<v8::Object> target) {
 
 	NodeDSP::Initialize(target);
 }
-
 
 void NodeDSP::Initialize (Handle<Object> target) {
 	HandleScope scope;
@@ -113,10 +113,10 @@ DSP_METHOD_2(AbsCplx, sqrt(pow(x[i], 2) + pow(y[i], 2)))
 Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 	HandleScope scope;
 
-	getFloat32Array(args[0]->ToObject(), dst, l);
+	Float32Array dst(args[0]->ToObject());
 
 	if (
-		dst == NULL ||
+		!dst.IsValid() ||
 		!args[1]->IsNumber() ||
 		!args[2]->IsNumber()
 	) return INVALID_ARGUMENTS_ERROR;
@@ -124,8 +124,8 @@ Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 	double first = args[1]->NumberValue();
 	double last = args[2]->NumberValue();
 
-	for (int i=0; i<l; i++) {
-		dst[i] = first + i * ((last - first) / (l - 1));
+	for (int i=0; i<dst.length; i++) {
+		dst[i] = first + i * ((last - first) / (dst.length - 1));
 	}
 
 	return Undefined();
@@ -134,16 +134,16 @@ Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 Handle<Value> NodeDSP::Random (const Arguments &args) {
 	HandleScope scope;
 
-	getFloat32Array(args[0]->ToObject(), dst, l);
+	Float32Array dst(args[0]->ToObject());
 
-	if (dst == NULL) return INVALID_ARGUMENTS_ERROR;
+	if (!dst.IsValid()) return INVALID_ARGUMENTS_ERROR;
 
 	double low = args[1]->IsNumber() ? args[1]->NumberValue() : 0.0;
 	double high = args[2]->IsNumber() ? args[2]->NumberValue() : 1.0;
 
-	for (int i=0; i<l; i++) {
+	for (int i=0; i<dst.length; i++) {
 		dst[i] = low + (float) rand() / ((float) RAND_MAX / (high - low));
 	}
 
 	return Undefined();
-}
+;}
