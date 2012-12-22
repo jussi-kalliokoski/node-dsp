@@ -15,12 +15,19 @@ public:
 	int IsValid () { return data != NULL; };
 
 	int Overlaps (const Float32Array that) {
-		return IsValid() &&
+		return IsValid() && !IsSame(that) &&
 			((data >= that.data &&
 			data < that.data + that.length) ||
 			(that.data >= data &&
 			that.data < data + length))
 		;
+	};
+
+	int IsSame (const Float32Array that) {
+		return
+			data != NULL &&
+			data == that.data &&
+			length == that.length;
 	};
 
 	void set (const Float32Array that) {
