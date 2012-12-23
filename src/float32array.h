@@ -9,6 +9,7 @@ public:
 	int length;
 
 	Float32Array (v8::Local<v8::Object> obj);
+	static v8::Local<v8::Object> New (int length);
 
 	float& operator[] (int index) { return data[index]; };
 
