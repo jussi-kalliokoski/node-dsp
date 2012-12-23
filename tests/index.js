@@ -40,7 +40,7 @@ ls(dirname, /\.json$/).forEach(function (testpath) {
 				return a
 			})
 
-			DSP[tests[i].method].apply(null, args)
+			DSP.DSP[tests[i].method].apply(null, args)
 
 			var r = new Float32Array(tests[i].result)
 

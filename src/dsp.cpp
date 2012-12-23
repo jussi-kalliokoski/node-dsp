@@ -10,53 +10,51 @@ using namespace v8;
 using namespace node;
 using namespace std;
 
-extern "C" void init (v8::Handle<v8::Object> target) {
-	v8::HandleScope scope;
-
-	NodeDSP::Initialize(target);
-}
-
 void NodeDSP::Initialize (Handle<Object> target) {
 	HandleScope scope;
 
 	srand((unsigned) time(0));
 
-	SetMethod(target, "add", Add);
-	SetMethod(target, "abs", Abs);
-	SetMethod(target, "absCplx", AbsCplx);
-	SetMethod(target, "acos", Acos);
-	SetMethod(target, "add", Add);
-	SetMethod(target, "asin", Asin);
-	SetMethod(target, "atan", Atan);
-	SetMethod(target, "atan2", Atan2);
-	SetMethod(target, "ceil", Ceil);
-//	SetMethod(target, "clamp", Clamp);
-	SetMethod(target, "cos", Cos);
-	SetMethod(target, "div", Div);
-	SetMethod(target, "divCplx", DivCplx);
-	SetMethod(target, "exp", Exp);
-	SetMethod(target, "floor", Floor);
-	SetMethod(target, "fract", Fract);
-	SetMethod(target, "log", Log);
-	SetMethod(target, "madd", Madd);
-	SetMethod(target, "max", Max);
-	SetMethod(target, "min", Min);
-	SetMethod(target, "mul", Mul);
-	SetMethod(target, "mulCplx", MulCplx);
-//	SetMethod(target, "pack", Pack);
-	SetMethod(target, "pow", Pow);
-	SetMethod(target, "ramp", Ramp);
-	SetMethod(target, "random", Random);
-	SetMethod(target, "round", Round);
-//	SetMethod(target, "sampleCubic", SampleCubic);
-//	SetMethod(target, "sampleLinear", SampleLinear);
-	SetMethod(target, "sign", Sign);
-	SetMethod(target, "sin", Sin);
-	SetMethod(target, "sqrt", Sqrt);
-	SetMethod(target, "sub", Sub);
-	SetMethod(target, "sum", Sum);
-	SetMethod(target, "tan", Tan);
-//	SetMethod(target, "unpack", Unpack);
+	Handle<Object> dsp = Object::New();
+
+	SetMethod(dsp, "add", Add);
+	SetMethod(dsp, "abs", Abs);
+	SetMethod(dsp, "absCplx", AbsCplx);
+	SetMethod(dsp, "acos", Acos);
+	SetMethod(dsp, "add", Add);
+	SetMethod(dsp, "asin", Asin);
+	SetMethod(dsp, "atan", Atan);
+	SetMethod(dsp, "atan2", Atan2);
+	SetMethod(dsp, "ceil", Ceil);
+//	SetMethod(dsp, "clamp", Clamp);
+	SetMethod(dsp, "cos", Cos);
+	SetMethod(dsp, "div", Div);
+	SetMethod(dsp, "divCplx", DivCplx);
+	SetMethod(dsp, "exp", Exp);
+	SetMethod(dsp, "floor", Floor);
+	SetMethod(dsp, "fract", Fract);
+	SetMethod(dsp, "log", Log);
+	SetMethod(dsp, "madd", Madd);
+	SetMethod(dsp, "max", Max);
+	SetMethod(dsp, "min", Min);
+	SetMethod(dsp, "mul", Mul);
+	SetMethod(dsp, "mulCplx", MulCplx);
+//	SetMethod(dsp, "pack", Pack);
+	SetMethod(dsp, "pow", Pow);
+	SetMethod(dsp, "ramp", Ramp);
+	SetMethod(dsp, "random", Random);
+	SetMethod(dsp, "round", Round);
+//	SetMethod(dsp, "sampleCubic", SampleCubic);
+//	SetMethod(dsp, "sampleLinear", SampleLinear);
+	SetMethod(dsp, "sign", Sign);
+	SetMethod(dsp, "sin", Sin);
+	SetMethod(dsp, "sqrt", Sqrt);
+	SetMethod(dsp, "sub", Sub);
+	SetMethod(dsp, "sum", Sum);
+	SetMethod(dsp, "tan", Tan);
+//	SetMethod(dsp, "unpack", Unpack);
+
+	target->Set(String::NewSymbol("DSP"), dsp);
 }
 
 DSP_METHOD_OP(Add, +)
