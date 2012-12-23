@@ -4,7 +4,7 @@
   "description": "A node implementation of the DSP API.",
   "main": "./build/Release/node-dsp",
   "scripts": {
-    "test": "node tests",
+    "test": "mocha --compilers coffee:coffee-script -R spec",
     "install": "node-gyp rebuild"
   },
   "repository": {
@@ -16,6 +16,11 @@
   ],
   "engines": {
     "node": "0.8.x"
+  },
+  "devDependencies": {
+    "mocha": "1.7.x",
+    "should": "*",
+    "coffee-script": "1.2.0"
   },
   "author": "Jussi Kalliokoski",
   "license": "BSD",
