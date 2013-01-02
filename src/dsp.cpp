@@ -1,6 +1,7 @@
 #include <math.h>
 #include <algorithm>
 #include <time.h>
+#include <vector>
 
 #include "dsp.h"
 #include "common.h"
@@ -26,7 +27,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 	SetMethod(dsp, "atan", Atan);
 	SetMethod(dsp, "atan2", Atan2);
 	SetMethod(dsp, "ceil", Ceil);
-//	SetMethod(dsp, "clamp", Clamp);
+	SetMethod(dsp, "clamp", Clamp);
 	SetMethod(dsp, "cos", Cos);
 	SetMethod(dsp, "div", Div);
 	SetMethod(dsp, "divCplx", DivCplx);
@@ -39,7 +40,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 	SetMethod(dsp, "min", Min);
 	SetMethod(dsp, "mul", Mul);
 	SetMethod(dsp, "mulCplx", MulCplx);
-//	SetMethod(dsp, "pack", Pack);
+	SetMethod(dsp, "pack", Pack);
 	SetMethod(dsp, "pow", Pow);
 	SetMethod(dsp, "ramp", Ramp);
 	SetMethod(dsp, "random", Random);
@@ -52,7 +53,7 @@ void NodeDSP::Initialize (Handle<Object> target) {
 	SetMethod(dsp, "sub", Sub);
 	SetMethod(dsp, "sum", Sum);
 	SetMethod(dsp, "tan", Tan);
-//	SetMethod(dsp, "unpack", Unpack);
+	SetMethod(dsp, "unpack", Unpack);
 
 	target->Set(String::NewSymbol("DSP"), dsp);
 }
@@ -172,6 +173,62 @@ Handle<Value> NodeDSP::Clamp (const Arguments &args) {
 
 	for (int i=0; i<l; i++) {
 		dst[i] = clamp(x[i], minArg, maxArg);
+	}
+
+	return Undefined();
+}
+
+Handle<Value> NodeDSP::Pack (const Arguments &args) {
+	HandleScope scope;
+
+	int srcCount = args.Length() - 3;
+
+	Float32Array dst(args[0]->ToObject());
+	int offset = args[1]->Uint32Value();
+	int stride = args[2]->Uint32Value();
+
+	vector<Float32Array> src;
+	for (int i=0; i<srcCount; i++) {
+		Float32Array arg(args[i - 3]->ToObject());
+		src.push_back(arg);
+	}
+
+	int dstCount = floor((dst.length - offset) / stride);
+	int l = dstCount < src[0].length ? dstCount : src[0].length;
+
+	for (int k=0; k<l; k++) {
+		int i = 0;
+		for (vector<Float32Array>::iterator it = src.begin(); it != src.end(); it++, i++) {
+			dst[offset + stride * k + i] = (*it)[k];
+		}
+	}
+
+	return Undefined();
+}
+
+Handle<Value> NodeDSP::Unpack (const Arguments &args) {
+	HandleScope scope;
+
+	int dstCount = args.Length() - 3;
+
+	Float32Array src(args[0]->ToObject());
+	int offset = args[1]->Uint32Value();
+	int stride = args[2]->Uint32Value();
+
+	vector<Float32Array> dst;
+	for (int i=0; i<dstCount; i++) {
+		Float32Array arg(args[i - 3]->ToObject());
+		dst.push_back(arg);
+	}
+
+	int srcCount = floor((src.length - offset) / stride);
+	int l = srcCount < dst[0].length ? srcCount : dst[0].length;
+
+	for (int k=0; k<l; k++) {
+		int i = 0;
+		for (vector<Float32Array>::iterator it = dst.begin(); it != dst.end(); it++, i++) {
+			(*it)[k] = src[offset + stride * k + i];
+		}
 	}
 
 	return Undefined();

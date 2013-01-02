@@ -28,7 +28,7 @@ public:
 	static v8::Handle<v8::Value> Min (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Mul (const v8::Arguments &args);
 	static v8::Handle<v8::Value> MulCplx (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> Pack (const v8::Arguments &args);
+	static v8::Handle<v8::Value> Pack (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Pow (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Ramp (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Random (const v8::Arguments &args);
@@ -41,7 +41,7 @@ public:
 	static v8::Handle<v8::Value> Sub (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Sum (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Tan (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> Unpack (const v8::Arguments &args);
+	static v8::Handle<v8::Value> Unpack (const v8::Arguments &args);
 };
 
 #endif
