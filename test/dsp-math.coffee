@@ -1650,3 +1650,90 @@ describe "DSP", ->
       dst = F(4)
       DSP.exp(dst, F([349.766603205353,671.0575385950506,573.497190605849,-415.3496460057795]))
       dst.should.be.identicalTo([Infinity,Infinity,Infinity,0])
+
+  describe ".random", ->
+    it "should provide results within bounds", ->
+      dst = F(4)
+      DSP.random(dst, -505.74774169921875, -364.25360107421875)
+      for i in dst
+        i.should.be.within(-505.74774169921875, -364.25360107421875)
+
+      dst = F(4)
+      DSP.random(dst, -645.1468505859375, 887.7542724609375)
+      for i in dst
+        i.should.be.within(-645.1468505859375, 887.7542724609375)
+
+      dst = F(4)
+      DSP.random(dst, 599.251953125, 617.5882568359375)
+      for i in dst
+        i.should.be.within(599.251953125, 617.5882568359375)
+
+      dst = F(4)
+      DSP.random(dst, 110.80574798583984, 178.7054901123047)
+      for i in dst
+        i.should.be.within(110.80574798583984, 178.7054901123047)
+
+      dst = F(4)
+      DSP.random(dst, -778.2592163085938, 360.3844909667969)
+      for i in dst
+        i.should.be.within(-778.2592163085938, 360.3844909667969)
+
+      dst = F(4)
+      DSP.random(dst, -439.63739013671875, 323.6299133300781)
+      for i in dst
+        i.should.be.within(-439.63739013671875, 323.6299133300781)
+
+      dst = F(4)
+      DSP.random(dst, 179.8490447998047, 444.4645080566406)
+      for i in dst
+        i.should.be.within(179.8490447998047, 444.4645080566406)
+
+      dst = F(4)
+      DSP.random(dst, -470.44146728515625, -122.72828674316406)
+      for i in dst
+        i.should.be.within(-470.44146728515625, -122.72828674316406)
+
+      dst = F(4)
+      DSP.random(dst, -187.23829650878906, 624.2064208984375)
+      for i in dst
+        i.should.be.within(-187.23829650878906, 624.2064208984375)
+
+      dst = F(4)
+      DSP.random(dst, -401.833251953125, 617.3110961914062)
+      for i in dst
+        i.should.be.within(-401.833251953125, 617.3110961914062)
+
+      dst = F(4)
+      DSP.random(dst, -147.5324249267578, 67.47258758544922)
+      for i in dst
+        i.should.be.within(-147.5324249267578, 67.47258758544922)
+
+      dst = F(4)
+      DSP.random(dst, -241.29754638671875, 883.778564453125)
+      for i in dst
+        i.should.be.within(-241.29754638671875, 883.778564453125)
+
+      dst = F(4)
+      DSP.random(dst, 493.2694396972656, 795.0589599609375)
+      for i in dst
+        i.should.be.within(493.2694396972656, 795.0589599609375)
+
+      dst = F(4)
+      DSP.random(dst, -76.12738800048828, 167.0929412841797)
+      for i in dst
+        i.should.be.within(-76.12738800048828, 167.0929412841797)
+
+      dst = F(4)
+      DSP.random(dst, 239.43917846679688, 956.3991088867188)
+      for i in dst
+        i.should.be.within(239.43917846679688, 956.3991088867188)
+
+      dst = F(4)
+      DSP.random(dst, 47.18735885620117, 130.5735321044922)
+      for i in dst
+        i.should.be.within(47.18735885620117, 130.5735321044922)
+
+      dst = F(4)
+      DSP.random(dst, -931.4014282226562, -91.81499481201172)
+      for i in dst
+        i.should.be.within(-931.4014282226562, -91.81499481201172)
