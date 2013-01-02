@@ -58,9 +58,25 @@ Handle<Value> NodeFFT::New (const Arguments &args) {
 	NodeFFT *nodefft = new NodeFFT();
 	nodefft->reset(size);
 
+	args.This()->SetAccessor(String::New("size"), GetSize, SetSize);
+
 	nodefft->Wrap(args.This());
 
 	return args.This();
+}
+
+Handle<Value> NodeFFT::GetSize (Local<String> property, const AccessorInfo &info) {
+	NodeFFT *nfft = ObjectWrap::Unwrap<NodeFFT>(info.This());
+
+	return Integer::New(nfft->size);
+}
+
+void NodeFFT::SetSize (Local<String> property, Local<Value> value, const AccessorInfo &info) {
+	NodeFFT *nfft = ObjectWrap::Unwrap<NodeFFT>(info.This());
+
+	if (!nfft->reset(value->Uint32Value())) {
+		/* TODO: Throw an error somehow */
+	}
 }
 
 Handle<Value> NodeFFT::Forward (const Arguments &args) {

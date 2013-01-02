@@ -14,6 +14,9 @@ public:
 
 	static v8::Handle<v8::Value> New (const v8::Arguments &args);
 
+	static v8::Handle<v8::Value> GetSize (v8::Local<v8::String> property, const v8::AccessorInfo &info);
+	static void SetSize (v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::AccessorInfo &info);
+
 	static v8::Handle<v8::Value> Forward (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Inverse (const v8::Arguments &args);
 	static v8::Handle<v8::Value> ForwardCplx (const v8::Arguments &args);
