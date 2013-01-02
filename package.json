@@ -4,8 +4,7 @@
   "description": "A node implementation of the DSP API.",
   "main": "./build/Release/node-dsp",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script -R spec",
-    "install": "node-gyp rebuild"
+    "test": "mocha --compilers coffee:coffee-script -R spec"
   },
   "repository": {
     "type": "git",
