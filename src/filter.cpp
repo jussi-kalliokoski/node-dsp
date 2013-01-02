@@ -55,7 +55,7 @@ void NodeFilter::clearHistory () {
 Handle<Value> NodeFilter::New (const Arguments &args) {
 	HandleScope scope;
 
-	if (!args[0]->IsNumber() || !args[0]->IsNumber()) {
+	if (!args[0]->IsNumber() || !args[1]->IsNumber()) {
 		return ThrowException(Exception::TypeError(String::New("Not supported")));
 	}
 
