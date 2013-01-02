@@ -33,8 +33,8 @@ public:
 	static v8::Handle<v8::Value> Ramp (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Random (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Round (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> SampleCubic (const v8::Arguments &args);
-//	static v8::Handle<v8::Value> SampleLinear (const v8::Arguments &args);
+	static v8::Handle<v8::Value> SampleCubic (const v8::Arguments &args);
+	static v8::Handle<v8::Value> SampleLinear (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Sign (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Sin (const v8::Arguments &args);
 	static v8::Handle<v8::Value> Sqrt (const v8::Arguments &args);

@@ -45,8 +45,8 @@ void NodeDSP::Initialize (Handle<Object> target) {
 	SetMethod(dsp, "ramp", Ramp);
 	SetMethod(dsp, "random", Random);
 	SetMethod(dsp, "round", Round);
-//	SetMethod(dsp, "sampleCubic", SampleCubic);
-//	SetMethod(dsp, "sampleLinear", SampleLinear);
+	SetMethod(dsp, "sampleCubic", SampleCubic);
+	SetMethod(dsp, "sampleLinear", SampleLinear);
 	SetMethod(dsp, "sign", Sign);
 	SetMethod(dsp, "sin", Sin);
 	SetMethod(dsp, "sqrt", Sqrt);
@@ -228,6 +228,90 @@ Handle<Value> NodeDSP::Unpack (const Arguments &args) {
 		int i = 0;
 		for (vector<Float32Array>::iterator it = dst.begin(); it != dst.end(); it++, i++) {
 			(*it)[k] = src[offset + stride * k + i];
+		}
+	}
+
+	return Undefined();
+}
+
+Handle<Value> NodeDSP::SampleCubic (const Arguments &args) {
+	HandleScope scope;
+
+	Float32Array dst(args[0]->ToObject());
+	Float32Array x(args[1]->ToObject());
+	Float32Array t(args[2]->ToObject());
+	int repeat = args[3]->BooleanValue();
+
+	int xLen = x.length;
+	int maxIdx = xLen - 1;
+
+	if (repeat) {
+		for (int k=MIN2(dst, t) - 1; k >= 0; k--) {
+			float t2 = t[k] - floor(t[k] / xLen) * xLen;
+			int idx = t2;
+			float w = t2 - idx;
+			float w2 = w * w;
+			float w3 = w2 * w;
+			float h2 = -2 * w3 + 3 * w2;
+			float h1 = 1 - h2;
+			float h4 = w3 - w2;
+			float h3 = h4 - w2 + w;
+			float p1 = x[idx > 0 ? idx - 1 : maxIdx];
+			float p2 = x[idx];
+			float p3 = x[idx < maxIdx ? idx + 1 : 0];
+			float p4 = x[idx < maxIdx - 1 ? idx + 2 : (idx + 2 - floor((idx + 2) / xLen) * xLen)];
+			dst[k] = h1 * p2 + h2 * p3 + 0.5 * (h3 * (p3 - p1) + h4 * (p4 - p2));
+		}
+	} else {
+		for (int k=MIN2(dst, t) - 1; k >= 0; k--) {
+			float t2 = t[k] < 0 ? 0 : t[k] > maxIdx ? maxIdx : t[k];
+			int idx = t2;
+			float w = t2 - idx;
+			float w2 = w * w;
+			float w3 = w2 * w;
+			float h2 = -2 * w3 + 3 * w2;
+			float h1 = 1 - h2;
+			float h4 = w3 - w2;
+			float h3 = h4 - w2 + w;
+			float p1 = x[idx > 0 ? idx - 1 : 0];
+			float p2 = x[idx];
+			float p3 = x[idx < maxIdx ? idx + 1 : 0];
+			float p4 = x[idx < maxIdx - 1 ? idx + 2 : maxIdx];
+			dst[k] = h1 * p2 + h2 * p3 + 0.5 * (h3 * (p3 - p1) + h4 * (p4 - p2));
+		}
+	}
+
+	return Undefined();
+}
+
+Handle<Value> NodeDSP::SampleLinear (const Arguments &args) {
+	HandleScope scope;
+
+	Float32Array dst(args[0]->ToObject());
+	Float32Array x(args[1]->ToObject());
+	Float32Array t(args[2]->ToObject());
+	int repeat = args[3]->BooleanValue();
+
+	int xLen = x.length;
+	int maxIdx = xLen - 1;
+
+	if (repeat) {
+		for (int k=MIN2(dst, t) - 1; k >= 0; k--) {
+			float t2 = t[k] - floor(t[k] / xLen) * xLen;
+			int idx = t2;
+			float w = t2 - idx;
+			float p1 = x[idx];
+			float p2 = x[idx < maxIdx ? idx + 1 : 0];
+			dst[k] = p1 + w * (p2 - p1);
+		}
+	} else {
+		for (int k=MIN2(dst, t) - 1; k >= 0; k--) {
+			float t2 = t[k] < 0 ? 0 : t[k] > maxIdx ? maxIdx : t[k];
+			int idx = t2;
+			float w = t2 - idx;
+			float p1 = x[idx];
+			float p2 = x[idx < maxIdx ? idx + 1 : maxIdx];
+			dst[k] = p1 + w * (p2 - p1);
 		}
 	}
 
