@@ -1539,3 +1539,114 @@ describe "DSP", ->
       DSP.log(dst, F([-739.9054109118879,-854.4405372813344,-760.220292955637,-776.1022066697478]))
       dst.should.be.identicalTo([NaN,NaN,NaN,NaN])
 
+  describe ".exp", ->
+    it "should provide correct results", ->
+      dst = F(4)
+      DSP.exp(dst, F([705,813,589,558]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([971,825,196,524]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([733,432,541,832]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([102,486,806,810]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([40,578,74,749]))
+      dst.should.be.identicalTo([235385270340419600,Infinity,1.3733829622695282e+32,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([444,626,233,90]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([924,695,599,490]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([42,151,311,69]))
+      dst.should.be.identicalTo([1739274975342231600,Infinity,Infinity,9.253781621373885e+29])
+
+      dst = F(4)
+      DSP.exp(dst, F([939,968,341,148]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+    it "should be able to deal with negative values", ->
+      dst = F(4)
+      DSP.exp(dst, F([-629,969,288,-347]))
+      dst.should.be.identicalTo([0,Infinity,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([-209,824,-8,752]))
+      dst.should.be.identicalTo([0,Infinity,0.000335462624207139,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([749,585,434,-356]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([-765,101,455,102]))
+      dst.should.be.identicalTo([0,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([-61,377,334,-51]))
+      dst.should.be.identicalTo([3.2213402768962287e-27,Infinity,Infinity,7.095474414148981e-23])
+
+      dst = F(4)
+      DSP.exp(dst, F([-643,-895,-860,460]))
+      dst.should.be.identicalTo([0,0,0,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([-518,-584,306,965]))
+      dst.should.be.identicalTo([0,0,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([-652,-324,874,-420]))
+      dst.should.be.identicalTo([0,0,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([60,-374,246,-195]))
+      dst.should.be.identicalTo([1.1420073962419164e+26,0,Infinity,0])
+
+    it "should be able to deal with decimal values", ->
+      dst = F(4)
+      DSP.exp(dst, F([-813.5456889867783,918.3146497234702,-665.0429107248783,-560.3719986975193]))
+      dst.should.be.identicalTo([0,Infinity,0,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([-409.5905045978725,-100.81147076562047,-663.9901311136782,673.2404991053045]))
+      dst.should.be.identicalTo([0,1.6815581571897805e-44,0,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([489.7149307653308,-657.7387852594256,-517.3180843703449,-263.7515184469521]))
+      dst.should.be.identicalTo([Infinity,0,0,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([-672.1051950007677,899.3820804171264,935.7533389702439,-794.7192629799247]))
+      dst.should.be.identicalTo([0,Infinity,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([-279.42896168679,-962.1608322486281,-570.6299101002514,556.1175267212093]))
+      dst.should.be.identicalTo([0,0,0,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([76.22474944218993,-677.3958117701113,939.3651112914085,-547.1678883768618]))
+      dst.should.be.identicalTo([1.2705391785673969e+33,0,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([383.8639077730477,661.4778218790889,784.6201579086483,691.6852374561131]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,Infinity])
+
+      dst = F(4)
+      DSP.exp(dst, F([549.2953895591199,-484.826457221061,212.89680059999228,-984.7100330516696]))
+      dst.should.be.identicalTo([Infinity,0,Infinity,0])
+
+      dst = F(4)
+      DSP.exp(dst, F([349.766603205353,671.0575385950506,573.497190605849,-415.3496460057795]))
+      dst.should.be.identicalTo([Infinity,Infinity,Infinity,0])
