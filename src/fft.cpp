@@ -29,9 +29,14 @@ int NodeFFT::reset (int ssize) {
 	if (ssize < 1) return 0;
 
 	size = ssize;
-	kiss_state_real = kiss_fftr_alloc(size, 0, NULL, NULL);
+
+	/* even N optimization */
+	if (!(size & 1)) {
+		kiss_state_real = kiss_fftr_alloc(size, 0, NULL, NULL);
+		kiss_state_real_i = kiss_fftr_alloc(size, 1, NULL, NULL);
+	}
+
 	kiss_state_cplx = kiss_fft_alloc(size, 0, NULL, NULL);
-	kiss_state_real_i = kiss_fftr_alloc(size, 1, NULL, NULL);
 	kiss_state_cplx_i = kiss_fft_alloc(size, 1, NULL, NULL);
 
 	kiss_fft_cpx temp_cpxi[size];
@@ -90,10 +95,23 @@ Handle<Value> NodeFFT::Forward (const Arguments &args) {
 	Float32Array dstImag(args[1]);
 	Float32Array x(args[2]);
 
-	kiss_fft_scalar *din = x.data;
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;
 
-	kiss_fftr(nfft->kiss_state_real, din, dout);
+	/* if uneven N */
+	if (size & 1) {
+		kiss_fft_cpx *din = nfft->temp_cplx_i;
+
+		for (int i=0; i<size; i++) {
+			din[i].r = x[i];
+			din[i].i = 0;
+		}
+
+		kiss_fft(nfft->kiss_state_cplx, din, dout);
+	} else {
+		kiss_fft_scalar *din = x.data;
+
+		kiss_fftr(nfft->kiss_state_real, din, dout);
+	}
 
 	for (int i=0; i<size; i++) {
 		dstReal[i] = dout[i].r;
