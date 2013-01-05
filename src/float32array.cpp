@@ -8,12 +8,15 @@ Float32Array::Float32Array (Local<Object> obj) :
 	data(NULL),
 	length(0)
 {
-	if (obj->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) return;
+	init(obj);
+}
 
-	length = obj->GetIndexedPropertiesExternalArrayDataLength();
-	data = static_cast<float*>(
-		obj->GetIndexedPropertiesExternalArrayData()
-	);
+Float32Array::Float32Array (Local<Value> val) :
+	data(NULL),
+	length(0)
+{
+	if (!val->IsObject()) return;
+	init(val->ToObject());
 }
 
 Local<Object> Float32Array::New (int length) {
@@ -30,4 +33,15 @@ Local<Object> Float32Array::New (int length) {
 	Local<Object> array = float32_array_constructor->NewInstance(1, &size);
 
 	return array;
+}
+
+void Float32Array::init (Local<Object> obj) {
+	if (
+		obj->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray
+	) return;
+
+	length = obj->GetIndexedPropertiesExternalArrayDataLength();
+	data = static_cast<float*>(
+		obj->GetIndexedPropertiesExternalArrayData()
+	);
 }

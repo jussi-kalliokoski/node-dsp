@@ -94,8 +94,8 @@ Handle<Value> NodeFilter::Filter (const Arguments &args) {
 	float *a = nf->a;
 	int aSize = nf->aSize;
 
-	Float32Array dst(args[0]->ToObject());
-	Float32Array x(args[1]->ToObject());
+	Float32Array dst(args[0]);
+	Float32Array x(args[1]);
 
 	float *bHist = nf->bHist;
 	float *aHist = nf->aHist;

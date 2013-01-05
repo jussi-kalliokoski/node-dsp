@@ -86,9 +86,9 @@ Handle<Value> NodeFFT::Forward (const Arguments &args) {
 
 	int size = nfft->size;
 
-	Float32Array dstReal(args[0]->ToObject());
-	Float32Array dstImag(args[1]->ToObject());
-	Float32Array x(args[2]->ToObject());
+	Float32Array dstReal(args[0]);
+	Float32Array dstImag(args[1]);
+	Float32Array x(args[2]);
 
 	kiss_fft_scalar *din = x.data;
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;
@@ -110,9 +110,9 @@ Handle<Value> NodeFFT::Inverse (const Arguments &args) {
 
 	int size = nfft->size;
 
-	Float32Array dst(args[0]->ToObject());
-	Float32Array xReal(args[1]->ToObject());
-	Float32Array xImag(args[2]->ToObject());
+	Float32Array dst(args[0]);
+	Float32Array xReal(args[1]);
+	Float32Array xImag(args[2]);
 
 	kiss_fft_cpx *din = nfft->temp_cplx_o;
 	kiss_fft_scalar *dout = dst.data;
@@ -134,10 +134,10 @@ Handle<Value> NodeFFT::ForwardCplx (const Arguments &args) {
 
 	int size = nfft->size;
 
-	Float32Array dstReal(args[0]->ToObject());
-	Float32Array dstImag(args[1]->ToObject());
-	Float32Array xReal(args[2]->ToObject());
-	Float32Array xImag(args[3]->ToObject());
+	Float32Array dstReal(args[0]);
+	Float32Array dstImag(args[1]);
+	Float32Array xReal(args[2]);
+	Float32Array xImag(args[3]);
 
 	kiss_fft_cpx *din = nfft->temp_cplx_i;
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;
@@ -164,10 +164,10 @@ Handle<Value> NodeFFT::InverseCplx (const Arguments &args) {
 
 	int size = nfft->size;
 
-	Float32Array dstReal(args[0]->ToObject());
-	Float32Array dstImag(args[1]->ToObject());
-	Float32Array xReal(args[2]->ToObject());
-	Float32Array xImag(args[3]->ToObject());
+	Float32Array dstReal(args[0]);
+	Float32Array dstImag(args[1]);
+	Float32Array xReal(args[2]);
+	Float32Array xImag(args[3]);
 
 	kiss_fft_cpx *din = nfft->temp_cplx_i;
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;

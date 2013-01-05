@@ -112,7 +112,7 @@ DSP_METHOD_2(AbsCplx, sqrt(pow(x[i], 2) + pow(y[i], 2)))
 Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 	HandleScope scope;
 
-	Float32Array dst(args[0]->ToObject());
+	Float32Array dst(args[0]);
 
 	if (
 		!dst.IsValid() ||
@@ -133,7 +133,7 @@ Handle<Value> NodeDSP::Ramp (const Arguments &args) {
 Handle<Value> NodeDSP::Random (const Arguments &args) {
 	HandleScope scope;
 
-	Float32Array dst(args[0]->ToObject());
+	Float32Array dst(args[0]);
 
 	if (!dst.IsValid()) return INVALID_ARGUMENTS_ERROR;
 
@@ -151,8 +151,8 @@ Handle<Value> NodeDSP::Clamp (const Arguments &args) {
 	HandleScope scope;
 
 	int n = 0;
-	Float32Array dst(args[n++]->ToObject());
-	Float32Array x(args[n++]->ToObject());
+	Float32Array dst(args[n++]);
+	Float32Array x(args[n++]);
 
 	if (args.Length() == 3) {
 		x.set(dst);
@@ -183,13 +183,13 @@ Handle<Value> NodeDSP::Pack (const Arguments &args) {
 
 	int srcCount = args.Length() - 3;
 
-	Float32Array dst(args[0]->ToObject());
+	Float32Array dst(args[0]);
 	int offset = args[1]->Uint32Value();
 	int stride = args[2]->Uint32Value();
 
 	vector<Float32Array> src;
 	for (int i=0; i<srcCount; i++) {
-		Float32Array arg(args[i - 3]->ToObject());
+		Float32Array arg(args[i - 3]);
 		src.push_back(arg);
 	}
 
@@ -211,13 +211,13 @@ Handle<Value> NodeDSP::Unpack (const Arguments &args) {
 
 	int dstCount = args.Length() - 3;
 
-	Float32Array src(args[0]->ToObject());
+	Float32Array src(args[0]);
 	int offset = args[1]->Uint32Value();
 	int stride = args[2]->Uint32Value();
 
 	vector<Float32Array> dst;
 	for (int i=0; i<dstCount; i++) {
-		Float32Array arg(args[i - 3]->ToObject());
+		Float32Array arg(args[i - 3]);
 		dst.push_back(arg);
 	}
 
@@ -237,9 +237,9 @@ Handle<Value> NodeDSP::Unpack (const Arguments &args) {
 Handle<Value> NodeDSP::SampleCubic (const Arguments &args) {
 	HandleScope scope;
 
-	Float32Array dst(args[0]->ToObject());
-	Float32Array x(args[1]->ToObject());
-	Float32Array t(args[2]->ToObject());
+	Float32Array dst(args[0]);
+	Float32Array x(args[1]);
+	Float32Array t(args[2]);
 	int repeat = args[3]->BooleanValue();
 
 	int xLen = x.length;
@@ -287,9 +287,9 @@ Handle<Value> NodeDSP::SampleCubic (const Arguments &args) {
 Handle<Value> NodeDSP::SampleLinear (const Arguments &args) {
 	HandleScope scope;
 
-	Float32Array dst(args[0]->ToObject());
-	Float32Array x(args[1]->ToObject());
-	Float32Array t(args[2]->ToObject());
+	Float32Array dst(args[0]);
+	Float32Array x(args[1]);
+	Float32Array t(args[2]);
 	int repeat = args[3]->BooleanValue();
 
 	int xLen = x.length;

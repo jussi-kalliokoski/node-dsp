@@ -19,7 +19,7 @@
 #define DSP_METHOD_ACCUMULATOR(name, defaultReturn, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array src(args[0]->ToObject());\
+	Float32Array src(args[0]);\
 \
 	if (!src.IsValid()) return INVALID_ARGUMENTS_ERROR;\
 \
@@ -37,8 +37,8 @@
 #define DSP_METHOD_1(name, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dst(args[0]->ToObject());\
-	Float32Array x(args[1]->ToObject());\
+	Float32Array dst(args[0]);\
+	Float32Array x(args[1]);\
 \
 	if (args.Length() == 1) {\
 		x.set(dst);\
@@ -61,9 +61,9 @@
 #define DSP_METHOD_2(name, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dst(args[0]->ToObject());\
-	Float32Array x(args[1]->ToObject());\
-	Float32Array y(args[2]->ToObject());\
+	Float32Array dst(args[0]);\
+	Float32Array x(args[1]);\
+	Float32Array y(args[2]);\
 \
 	if (args.Length() == 2) {\
 		y.set(x);\
@@ -89,14 +89,14 @@
 #define DSP_METHOD_2_OVERLOADING(name, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	Float32Array dst(args[0]->ToObject());\
+	Float32Array dst(args[0]);\
 	int nargs = args.Length() - 1;\
 	int l = dst.length;\
 \
 	if (!dst.IsValid() || !nargs) return INVALID_ARGUMENTS_ERROR;\
 \
 	for (int i=0; i<nargs; i++) {\
-		Float32Array arg(args[i + 1]->ToObject());\
+		Float32Array arg(args[i + 1]);\
 		if (arg.IsValid()) {\
 			l = min(l, arg.length);\
 		} else if (!args[i + 1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
@@ -106,7 +106,7 @@
 \
 	float tmp[l];\
 \
-	Float32Array x(args[1]->ToObject());\
+	Float32Array x(args[1]);\
 	if (x.IsValid()) {\
 		memcpy(tmp, x.data, l * sizeof(float));\
 	} else {\
@@ -115,7 +115,7 @@
 	}\
 \
 	for (int i=1; i<nargs; i++) {\
-		Float32Array x(args[i + 1]->ToObject());\
+		Float32Array x(args[i + 1]);\
 \
 		if (x.IsValid()) {\
 			for (int n=0; n<l; n++) {\
@@ -141,10 +141,10 @@
 	HandleScope scope;\
 \
 	int n = 0;\
-	Float32Array dst(args[n++]->ToObject());\
-	Float32Array x(args[n++]->ToObject());\
-	Float32Array y(args[n++]->ToObject());\
-	Float32Array z(args[n++]->ToObject());\
+	Float32Array dst(args[n++]);\
+	Float32Array x(args[n++]);\
+	Float32Array y(args[n++]);\
+	Float32Array z(args[n++]);\
 \
 	if (args.Length() == 3) {\
 		z.set(y);\
@@ -185,12 +185,12 @@
 	HandleScope scope;\
 \
 	int n = 0;\
-	Float32Array dstReal(args[n++]->ToObject());\
-	Float32Array dstImag(args[n++]->ToObject());\
-	Float32Array xReal(args[n++]->ToObject());\
-	Float32Array xImag(args[n++]->ToObject());\
-	Float32Array yReal(args[n++]->ToObject());\
-	Float32Array yImag(args[n++]->ToObject());\
+	Float32Array dstReal(args[n++]);\
+	Float32Array dstImag(args[n++]);\
+	Float32Array xReal(args[n++]);\
+	Float32Array xImag(args[n++]);\
+	Float32Array yReal(args[n++]);\
+	Float32Array yImag(args[n++]);\
 \
 	if (args.Length() == 4) {\
 		yReal.set(xReal);\
