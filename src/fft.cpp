@@ -31,7 +31,7 @@ int NodeFFT::reset (int ssize) {
 	size = ssize;
 
 	/* even N optimization */
-	if (!(size & 1)) {
+	if (!(size % 2)) {
 		kiss_state_real = kiss_fftr_alloc(size, 0, NULL, NULL);
 		kiss_state_real_i = kiss_fftr_alloc(size, 1, NULL, NULL);
 	}
@@ -98,7 +98,7 @@ Handle<Value> NodeFFT::Forward (const Arguments &args) {
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;
 
 	/* if uneven N */
-	if (size & 1) {
+	if (size % 2) {
 		kiss_fft_cpx *din = nfft->temp_cplx_i;
 
 		for (int i=0; i<size; i++) {
