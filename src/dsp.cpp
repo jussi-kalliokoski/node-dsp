@@ -80,7 +80,7 @@ DSP_METHOD_ALG(Floor, floor)
 DSP_METHOD_ALG(Round, round)
 
 DSP_METHOD_ALG(Sqrt, sqrt)
-DSP_METHOD_2_OVERLOADING(Pow, pow(x[i], yy), pow(x[i], y[i]))
+DSP_METHOD_2_OVERLOADING(Pow, pow(a, b))
 
 DSP_METHOD_ALG(Exp, exp)
 DSP_METHOD_ALG(Log, log)

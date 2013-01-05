@@ -86,39 +86,53 @@
 	return Undefined();\
 }
 
-#define DSP_METHOD_2_OVERLOADING(name, algo1, algo2) Handle<Value> NodeDSP::name (const Arguments &args) {\
+#define DSP_METHOD_2_OVERLOADING(name, algo) Handle<Value> NodeDSP::name (const Arguments &args) {\
 	HandleScope scope;\
 \
-	int n = 0;\
-	Float32Array dst(args[n++]->ToObject());\
-	Float32Array x(args[n++]->ToObject());\
-	Float32Array y(args[n++]->ToObject());\
+	Float32Array dst(args[0]->ToObject());\
+	int nargs = args.Length() - 1;\
+	int l = dst.length;\
 \
-	if (args.Length() == 2) {\
-		y.set(x);\
-		x.set(dst);\
-		n--;\
-	} else if (dst.Overlaps(x)) return OVERLAP_ERROR;\
-	if (dst.Overlaps(y)) return OVERLAP_ERROR;\
+	if (!dst.IsValid() || !nargs) return INVALID_ARGUMENTS_ERROR;\
 \
-	if (!dst.IsValid() || !x.IsValid()) return INVALID_ARGUMENTS_ERROR;\
+	for (int i=0; i<nargs; i++) {\
+		Float32Array arg(args[i + 1]->ToObject());\
+		if (arg.IsValid()) {\
+			l = min(l, arg.length);\
+		} else if (!args[i + 1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+	}\
 \
-	if (!y.IsValid()) {\
-		if (!args[n-1]->IsNumber()) return INVALID_ARGUMENTS_ERROR;\
+	if (!l) return Undefined();\
 \
-		float yy = args[n-1]->NumberValue();\
-		int l = MIN2(dst, x);\
+	float tmp[l];\
 \
-		for (int i=0; i<l; i++) {\
-			dst[i] = algo1;\
-		}\
+	Float32Array x(args[1]->ToObject());\
+	if (x.IsValid()) {\
+		memcpy(tmp, x.data, l * sizeof(float));\
 	} else {\
-		int l = MIN3(dst, x, y);\
+		float b = args[1]->NumberValue();\
+		fill(tmp, tmp + l, b);\
+	}\
 \
-		for (int i=0; i<l; i++) {\
-			dst[i] = algo2;\
+	for (int i=1; i<nargs; i++) {\
+		Float32Array x(args[i + 1]->ToObject());\
+\
+		if (x.IsValid()) {\
+			for (int n=0; n<l; n++) {\
+				float a = tmp[n];\
+				float b = x[n];\
+				tmp[n] = algo;\
+			}\
+		} else {\
+			float b = args[i + 1]->NumberValue();\
+			for (int n=0; n<l; n++) {\
+				float a = tmp[n];\
+				tmp[n] = algo;\
+			}\
 		}\
 	}\
+\
+	memcpy(dst.data, tmp, l * sizeof(float));\
 \
 	return Undefined();\
 }
@@ -230,7 +244,7 @@
 	return Undefined();\
 }
 
-#define DSP_METHOD_OP(name, op) DSP_METHOD_2_OVERLOADING(name, x[i] op yy, x[i] op y[i])
+#define DSP_METHOD_OP(name, op) DSP_METHOD_2_OVERLOADING(name, a op b)
 #define DSP_METHOD_ALG(name, method) DSP_METHOD_1(name, method(x[i]))
 
 #endif
