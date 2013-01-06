@@ -34,13 +34,17 @@ int NodeFFT::reset (int ssize) {
 	if (!(size % 2)) {
 		kiss_state_real = kiss_fftr_alloc(size, 0, NULL, NULL);
 		kiss_state_real_i = kiss_fftr_alloc(size, 1, NULL, NULL);
+	} else {
+		kiss_state_real = NULL;
+		kiss_state_real_i = NULL;
 	}
 
 	kiss_state_cplx = kiss_fft_alloc(size, 0, NULL, NULL);
 	kiss_state_cplx_i = kiss_fft_alloc(size, 1, NULL, NULL);
 
 	kiss_fft_cpx temp_cpxi[size];
-	kiss_fft_cpx temp_cpxo[size];
+	/* pad to 6 to avoid segfaults with kiss_fft, see issue #2 */
+	kiss_fft_cpx temp_cpxo[size < 6 ? 6 : size];
 	temp_cplx_i = temp_cpxi;
 	temp_cplx_o = temp_cpxo;
 
@@ -97,7 +101,7 @@ Handle<Value> NodeFFT::Forward (const Arguments &args) {
 
 	kiss_fft_cpx *dout = nfft->temp_cplx_o;
 
-	/* if uneven N */
+	/* if odd N */
 	if (size % 2) {
 		kiss_fft_cpx *din = nfft->temp_cplx_i;
 
@@ -132,7 +136,7 @@ Handle<Value> NodeFFT::Inverse (const Arguments &args) {
 	Float32Array xReal(args[1]);
 	Float32Array xImag(args[2]);
 
-	kiss_fft_cpx *din = nfft->temp_cplx_o;
+	kiss_fft_cpx *din = nfft->temp_cplx_i;
 	kiss_fft_scalar *dout = dst.data;
 
 	for (int i=0; i<size; i++) {
