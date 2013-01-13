@@ -55,19 +55,29 @@ void NodeFilter::clearHistory () {
 Handle<Value> NodeFilter::New (const Arguments &args) {
 	HandleScope scope;
 
-	if (!args[0]->IsNumber() || !args[1]->IsNumber()) {
+	if (!args[0]->IsNumber()) {
 		return ThrowException(Exception::TypeError(String::New("Not supported")));
 	}
 
 	int bSize = args[0]->Int32Value();
-	int aSize = args[1]->Int32Value();
+	int aSize = args[1]->IsNumber() ? args[1]->Int32Value() : 0;
 
 	if (bSize < 1 || aSize < 0) {
 		return ThrowException(Exception::TypeError(String::New("Not supported")));
 	}
 
-	Local<Object> bValue = Float32Array::New(bSize);
-	Local<Object> aValue = Float32Array::New(aSize);
+	/* inline this stuff, otherwise you get neutered float32arrays */
+	Local<Function> float32_array_constructor;
+	Local<Object> global = Context::GetCurrent()->Global();
+	Local<Value> val = global->Get(String::New("Float32Array"));
+	assert(!val.IsEmpty() && "type not found: Float32Array");
+	assert(val->IsFunction() && "not a constructor: Float32Array");
+	float32_array_constructor = Local<Function>::New(val.As<Function>());
+
+	Local<Value> bbSize = Integer::NewFromUnsigned(bSize);
+	Local<Value> aaSize = Integer::NewFromUnsigned(aSize);
+	Local<Object> bValue = float32_array_constructor->NewInstance(1, &bbSize);
+	Local<Object> aValue = float32_array_constructor->NewInstance(1, &aaSize);
 
 	Float32Array b(bValue);
 	Float32Array a(aValue);
@@ -168,6 +178,8 @@ Handle<Value> NodeFilter::Filter (const Arguments &args) {
 			for (int m=0; m < aSize; m++) {
 				res -= a[m] * dst[k - 1 - m];
 			}
+
+			dst[k] = res;
 		}
 	}
 
