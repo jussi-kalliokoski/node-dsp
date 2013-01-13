@@ -1,6 +1,6 @@
 {
   "name": "dsp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A node implementation of the DSP API.",
   "main": "./build/Release/node-dsp",
   "scripts": {
