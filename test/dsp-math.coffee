@@ -1315,6 +1315,23 @@ describe "DSP", ->
       DSP.sign(dst, F([361.35297920554876,-747.0349543727934,187.93214345350862,-189.53268276527524]))
       dst.should.be.identicalTo([1,-1,1,-1])
 
+  it "should be able to distinguish signed zeros", ->
+     dst = F(4)
+     DSP.sign(dst, F([0.0, 0.0, 0.0, 0.0]))
+     dst.should.be.identicalTo([1, 1, 1, 1])
+
+     dst = F(4)
+     DSP.sign(dst, F([-0.0, -0.0, -0.0, -0.0]))
+     dst.should.be.identicalTo([-1, -1, -1, -1])
+
+     dst = F(4)
+     DSP.sign(dst, F([0.0, -0.0, 0.0, -0.0]))
+     dst.should.be.identicalTo([1, -1, 1, -1])
+
+     dst = F(4)
+     DSP.sign(dst, F([-0.0, 0.0, 0.0, -0.0]))
+     dst.should.be.identicalTo([-1, 1, 1, -1])
+
   describe ".sqrt", ->
     it "should provide correct results", ->
       dst = F(4)
