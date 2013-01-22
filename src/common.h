@@ -1,7 +1,8 @@
 #ifndef NODE_DSP_COMMON_H
 #define NODE_DSP_COMMON_H
 
-#define sign(x) (x != x ? x : x < 0.0 || x == -0.0 ? -1.0 : 1.0)
+#define sign(x) (x != x ? x : x < 0.0 ||\
+    1.0 / x == -std::numeric_limits<float>::infinity() ? -1.0 : 1.0)
 #define modulo(x, y) (x - floor(x / y) * y)
 #define fract(x) (modulo(x, 1))
 #define clamp(x, min, max) (isnan(x) || isnan(max) || isnan(min)) ? NAN :\
